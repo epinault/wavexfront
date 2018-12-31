@@ -5,6 +5,8 @@ defmodule Wavexfront.Proxy.Worker do
   """
   use Connection
 
+  require Logger
+
   alias Wavexfront.Item
 
   @initial_state %{socket: nil}
@@ -21,13 +23,19 @@ defmodule Wavexfront.Proxy.Worker do
   def connect(_info, state) do
     opts = [:binary, active: false]
 
-    case :gen_tcp.connect(to_char_list(state[:host]), state[:port], opts) do
+    case :gen_tcp.connect(to_charlist(state[:host]), state[:port], opts) do
       {:ok, socket} ->
         {:ok, %{state | socket: socket}}
 
       {:error, reason} ->
-        IO.puts("TCP connection error: #{inspect(reason)}")
-        # try again in one second
+        # FIXME: try again in one second. Might want to make this exponential
+        # and configurable
+        :error_logger.format("Connection error: ~s for ~s:~B ", [
+          reason,
+          state[:host],
+          state[:port]
+        ])
+
         {:backoff, 1000, state}
     end
   end
@@ -40,11 +48,11 @@ defmodule Wavexfront.Proxy.Worker do
         Connection.reply(from, :ok)
 
       {:error, :closed} ->
-        :error_logger.format("Connection closed~n", [])
+        :error_logger.format("Connection closed for ~s:~B ~n", [s[:host], s[:port]])
 
       {:error, reason} ->
         reason = :inet.format_error(reason)
-        :error_logger.format("Connection error: ~s~n", [reason])
+        :error_logger.format("Connection error: ~s for ~s:~B ", [reason, s[:host], s[:port]])
     end
 
     {:connect, :reconnect, %{s | socket: nil}}

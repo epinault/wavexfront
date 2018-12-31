@@ -2,33 +2,28 @@ defmodule Wavexfront.Item do
   @moduledoc """
   This is the representation of metric item as a structure
 
-  The to_text method allows to serialize to the format readable by the proxy using
-  a TCP connection
+  * ```name```: The name of your metric
+  * ```type```: The type of metric. Must be one of :histogram_1m, histogram_1h, histogram_1d, :counter or :gauge
+  * ```timestamp```: The timestamp of the metrics. May be nil and will be then resolved by the proxy
+  * ```source```: The host it was sent from
+  * ```labels```: Keyword list of extra labels
+  * ```delta```: Only applies to counters if they are delta counters
+
+  The serialization of the metrics is done by using the ```Item.to_text``` function.
+
   """
   @enforce_keys [:name, :type, :value, :source]
-  defstruct [:type, :name, :value, :timestamp, :source, labels: []]
+  defstruct [:type, :name, :value, :timestamp, :source, labels: [], delta: false]
 
-  def new(type, name, value, timestamp, source, labels) do
-    %__MODULE__{
-      type: type,
-      name: name,
-      value: value,
-      timestamp: timestamp,
-      source: source,
-      labels: labels
-    }
+  def new(fields) do
+    Kernel.struct(__MODULE__, fields)
   end
 
   def to_text(%__MODULE__{} = item) do
-    timestamp =
-      if item.timestamp do
-        DateTime.to_unix(item.timestamp)
-      end
-
     elements = [
       item.name,
-      item.value,
-      timestamp,
+      convert_value(item),
+      convert_timestamp(item),
       item.source,
       flatten_labels(item)
     ]
@@ -44,4 +39,13 @@ defmodule Wavexfront.Item do
       " "
     )
   end
+
+  defp convert_value(%__MODULE__{delta: true} = item), do: "Δ#{item.value}"
+
+  defp convert_value(%__MODULE__{} = item), do: item.value
+
+  defp convert_timestamp(%__MODULE__{timestamp: timestamp} = item) when not is_nil(timestamp),
+    do: DateTime.to_unix(item.timestamp)
+
+  defp convert_timestamp(_item), do: nil
 end

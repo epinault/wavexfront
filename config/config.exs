@@ -1,5 +1,5 @@
 use Mix.Config
 
-config :wavexfront,
-  enabled: true,
-  histogram_enabled: true
+config :wavexfront, enabled: false
+
+import_config "#{Mix.env()}.exs"

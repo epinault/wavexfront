@@ -74,7 +74,9 @@ defmodule Wavexfront.Client do
 
   defp select_pool(item) do
     case item.type do
-      :histogram -> :histogram
+      :histogram_1m -> :histogram_1m
+      :histogram_1h -> :histogram_1h
+      :histogram_1d -> :histogram_1d
       _ -> :counter_and_gauge
     end
   end

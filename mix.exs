@@ -1,7 +1,7 @@
 defmodule Wavexfront.MixProject do
   use Mix.Project
 
-  @version "0.9.2"
+  @version "0.1.0"
 
   def project do
     [
@@ -41,8 +41,8 @@ defmodule Wavexfront.MixProject do
       {:jason, "~> 1.0"},
       {:connection, "~> 1.0"},
       {:poolboy, "~> 1.5.1"},
-      {:credo, "~> 1.0"},
-      {:ex_doc, "~> 0.19", only: :dev}
+      {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.19", only: :dev, runtime: false}
     ]
   end
 

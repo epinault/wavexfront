@@ -38,8 +38,8 @@ Wavefront requires some configuration in order to work. For example, in config/c
 ```elixir
 config :wavexfront,
   enabled: true,
-  histogram_enabled: true,
-  counter_and_gauge_enabled: true
+  histogram_1m: [enabled: true],
+  counter_and_gauge: [enabled: true]
 
 ```
 
@@ -50,19 +50,23 @@ Now in order to send a metric you can use the following API
 - Histogram
 
 ```elixir
-  Wavexfront.histogram_value("my_histogram", value: 42, source: "myhost", labels: [yo: "mama"])
+  Wavexfront.send_histogram("my_histogram", value: 42, source: "myhost", labels: [yo: "mama"])
 ```
 
 - Counter
 
 ```elixir
-  Wavexfront.counter_value("my_counter", source: "myhost", labels: [yo: "mama"])
+  Wavexfront.send_counter("my_counter", source: "myhost", labels: [yo: "mama"])
+
+  # or  Delta counter (if you do not maintain the counter yourself)
+
+  Wavexfront.send_delta_counter("my_counter", source: "myhost", labels: [yo: "mama"])
 ```
 
 - Gauge
 
 ```elixir
-  Wavexfront.gauge_value("my_gauge", value: 2, source: "myhost", labels: [yo: "mama"])
+  Wavexfront.send_gauge("my_gauge", value: 2, source: "myhost", labels: [yo: "mama"])
 ```
 
 ## Contributing
