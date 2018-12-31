@@ -49,9 +49,13 @@ defmodule Wavexfront.MixProject do
   defp docs do
     [
       main: "Wavexfront",
+      logo: "doc_sources/images/logo.png",
       source_ref: "v#{@version}",
       source_url: "https://github.com/epinault/wavexfront",
-      extras: [""]
+      extras:
+        [
+          "README.md"
+        ] ++ Path.wildcard("doc_sources/*.md")
     ]
   end
 end
