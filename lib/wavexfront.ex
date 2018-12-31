@@ -4,7 +4,7 @@ defmodule Wavexfront do
 
   ## Configuration
 
-  The ```:wavefront``` application needs to be configured properly in order to work.
+  The ```:wavexfront``` application needs to be configured properly in order to work.
   This configuration can be done, for example, in ```config/config.exs```:
 
   ```elixir
