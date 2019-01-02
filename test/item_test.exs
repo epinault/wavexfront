@@ -48,7 +48,7 @@ defmodule Wavexfront.ItemTest do
       labels: [label1: "yo"]
     }
 
-    assert Item.to_text(item) == "name value source \"label1\"=\"yo\"\n"
+    assert Item.to_text(item) == "name value source=\"source\" \"label1\"=\"yo\"\n"
   end
 
   test "It convert to text with multiple labels" do
@@ -60,7 +60,8 @@ defmodule Wavexfront.ItemTest do
       labels: [label1: "yo", label2: "mama"]
     }
 
-    assert Item.to_text(item) == "name value source \"label1\"=\"yo\" \"label2\"=\"mama\"\n"
+    assert Item.to_text(item) ==
+             "name value source=\"source\" \"label1\"=\"yo\" \"label2\"=\"mama\"\n"
   end
 
   test "It convert to text when missing a labels and timestamp" do
@@ -72,7 +73,8 @@ defmodule Wavexfront.ItemTest do
       labels: [label1: "yo", label2: "mama"]
     }
 
-    assert Item.to_text(item) == "name value source \"label1\"=\"yo\" \"label2\"=\"mama\"\n"
+    assert Item.to_text(item) ==
+             "name value source=\"source\" \"label1\"=\"yo\" \"label2\"=\"mama\"\n"
   end
 
   test "It convert to text with a timestamp" do
@@ -88,7 +90,7 @@ defmodule Wavexfront.ItemTest do
     }
 
     assert Item.to_text(item) ==
-             "name value #{DateTime.to_unix(time)} source \"label1\"=\"yo\" \"label2\"=\"mama\"\n"
+             "name value #{DateTime.to_unix(time)} source=\"source\" \"label1\"=\"yo\" \"label2\"=\"mama\"\n"
   end
 
   test "It convert to text with a using delta" do
@@ -105,6 +107,6 @@ defmodule Wavexfront.ItemTest do
     }
 
     assert Item.to_text(item) ==
-             "name Δvalue #{DateTime.to_unix(time)} source \"label1\"=\"yo\" \"label2\"=\"mama\"\n"
+             "name Δvalue #{DateTime.to_unix(time)} source=\"source\" \"label1\"=\"yo\" \"label2\"=\"mama\"\n"
   end
 end

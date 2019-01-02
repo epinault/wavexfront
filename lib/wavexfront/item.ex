@@ -24,7 +24,7 @@ defmodule Wavexfront.Item do
       item.name,
       convert_value(item),
       convert_timestamp(item),
-      item.source,
+      convert_source(item),
       flatten_labels(item)
     ]
 
@@ -39,6 +39,8 @@ defmodule Wavexfront.Item do
       " "
     )
   end
+
+  defp convert_source(item), do: "source=\"#{item.source}\""
 
   defp convert_value(%__MODULE__{delta: true} = item), do: "Δ#{item.value}"
 
