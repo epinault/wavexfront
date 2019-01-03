@@ -29,7 +29,7 @@ defmodule Wavexfront.Client do
       GenServer.cast(pid, {:emit, item})
     else
       Logger.warn(
-        "(Wavexfront) Trying to report metrics but the :wavesfront application has not been started",
+        "(Wavexfront) Trying to report metrics but the :wavexfront application has not been started",
         wavexfront: false
       )
     end
@@ -60,7 +60,7 @@ defmodule Wavexfront.Client do
 
     :poolboy.transaction(
       pool_name,
-      fn pid -> GenServer.call(pid, {:send, item}) end,
+      fn pid -> Wavexfront.Proxy.Worker.send(pid, item) end,
       @timeout
     )
 

@@ -20,6 +20,14 @@ defmodule Wavexfront.Proxy.Worker do
     {:connect, nil, state}
   end
 
+  def send(conn, data), do: Connection.call(conn, {:send, data})
+
+  def recv(conn, bytes, timeout \\ 3000) do
+    Connection.call(conn, {:recv, bytes, timeout})
+  end
+
+  def close(conn), do: Connection.call(conn, :close)
+
   def connect(_info, state) do
     opts = [:binary, active: false]
 
@@ -63,9 +71,24 @@ defmodule Wavexfront.Proxy.Worker do
   end
 
   def handle_call({:send, item}, _, %{socket: sock} = s) do
+    Logger.warn(fn -> "Sending metric #{Item.to_text(item)} " end)
+
     case :gen_tcp.send(sock, Item.to_text(item)) do
       :ok ->
         {:reply, :ok, s}
+
+      {:error, _} = error ->
+        {:disconnect, error, error, s}
+    end
+  end
+
+  def handle_call({:recv, bytes, timeout}, _, %{sock: sock} = s) do
+    case :gen_tcp.recv(sock, bytes, timeout) do
+      {:ok, _} = ok ->
+        {:reply, ok, s}
+
+      {:error, :timeout} = timeout ->
+        {:reply, timeout, s}
 
       {:error, _} = error ->
         {:disconnect, error, error, s}
