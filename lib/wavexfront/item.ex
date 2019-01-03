@@ -15,13 +15,16 @@ defmodule Wavexfront.Item do
   @enforce_keys [:name, :type, :value, :source]
   defstruct [:type, :name, :value, :timestamp, :source, labels: [], delta: false]
 
+  @delta_prefix "\u2206"
+  @alt_delta_prefix "\u0394"
+
   def new(fields) do
     Kernel.struct(__MODULE__, fields)
   end
 
   def to_text(%__MODULE__{} = item) do
     elements = [
-      item.name,
+      convert_name(item),
       convert_value(item),
       convert_timestamp(item),
       convert_source(item),
@@ -40,9 +43,10 @@ defmodule Wavexfront.Item do
     )
   end
 
-  defp convert_source(item), do: "source=\"#{item.source}\""
+  defp convert_name(%__MODULE__{delta: true} = item), do: "#{@delta_prefix}#{item.name}"
+  defp convert_name(%__MODULE__{} = item), do: item.name
 
-  defp convert_value(%__MODULE__{delta: true} = item), do: "\u0394#{item.value}"
+  defp convert_source(item), do: "source=\"#{item.source}\""
 
   defp convert_value(%__MODULE__{} = item), do: item.value
 

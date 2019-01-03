@@ -71,8 +71,6 @@ defmodule Wavexfront.Proxy.Worker do
   end
 
   def handle_call({:send, item}, _, %{socket: sock} = s) do
-    Logger.warn(fn -> "Sending metric #{Item.to_text(item)} " end)
-
     case :gen_tcp.send(sock, Item.to_text(item)) do
       :ok ->
         {:reply, :ok, s}

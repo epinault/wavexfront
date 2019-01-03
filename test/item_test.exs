@@ -107,6 +107,6 @@ defmodule Wavexfront.ItemTest do
     }
 
     assert Item.to_text(item) ==
-             "name Δvalue #{DateTime.to_unix(time)} source=\"source\" \"label1\"=\"yo\" \"label2\"=\"mama\"\n"
+             "∆name value #{DateTime.to_unix(time)} source=\"source\" \"label1\"=\"yo\" \"label2\"=\"mama\"\n"
   end
 end
