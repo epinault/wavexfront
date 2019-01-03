@@ -42,7 +42,7 @@ defmodule Wavexfront.Item do
 
   defp convert_source(item), do: "source=\"#{item.source}\""
 
-  defp convert_value(%__MODULE__{delta: true} = item), do: "Δ#{item.value}"
+  defp convert_value(%__MODULE__{delta: true} = item), do: "\u0394#{item.value}"
 
   defp convert_value(%__MODULE__{} = item), do: item.value
 
