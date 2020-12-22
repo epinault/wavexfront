@@ -14,6 +14,8 @@ defmodule Wavexfront.MixProject do
       package: package(),
       deps: deps(),
       docs: docs(),
+      source_url: "https://github.com/epinault/wavexfront",
+      homepage_url: "https://github.com/epinault/wavexfront",
       name: "Wavexfront"
     ]
   end
@@ -29,7 +31,7 @@ defmodule Wavexfront.MixProject do
   defp package() do
     [
       maintainers: ["Emmanuel Pinault"],
-      licenses: ["ISC"],
+      licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/epinault/wavexfront"}
     ]
   end
